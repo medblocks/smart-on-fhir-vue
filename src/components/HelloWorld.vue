@@ -3,10 +3,15 @@
   <div>
     <button v-if="code == undefined">
       <a
-        href="https://fhir.epic.com/interconnect-fhir-oauth/oauth2/authorize?response_type=code&redirect_uri=http://localhost:3000&client_id=2c2944bf-0add-4ed0-9e4d-eba58cc91040&state=1234"
+        target="_blank"
+        href="https://fhir.epic.com/interconnect-fhir-oauth/oauth2/authorize?response_type=code&redirect_uri=http://localhost:3000&client_id=2c2944bf-0add-4ed0-9e4d-eba58cc91040&state=1234&scope=openid fhirUser"
         >Sign in</a
       >
     </button>
+    <p>Username: fhircamila</p>
+    <p>Password: epicepic1</p>
+
+    <pre v-if="accesstoken">{{ accesstoken }}</pre>
   </div>
   <!-- <p>
     <a href="https://vitejs.dev/guide/features.html" target="_blank">
@@ -57,15 +62,19 @@ export default {
           params,
           config
         )
-        .then((response) => (this.accesstoken = response.data.access_token))
+        .then((response) => {
+          console.log(response.data);
+          this.accesstoken = response.data.access_token;
+        })
         .catch(function (error) {
           console.log(error);
         });
     }
+    const currentPatient = "eq081-VQEgP8drUUqCWzHfw3";
     if (this.accesstoken != "") {
       axios
         .get(
-          `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/Patient/${this.accesstoken}`
+          `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/Patient/${currentPatient}`
         )
         .then(function (response) {
           console.log(response);
