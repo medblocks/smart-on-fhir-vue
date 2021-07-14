@@ -10,8 +10,8 @@
     </button>
     <p>Username: fhircamila</p>
     <p>Password: epicepic1</p>
-    <hr>
-    <p>Patient: {{patient}}</p>
+    <hr />
+    <p>Patient: {{ patient }}</p>
     <p>Access code:</p>
     <pre v-if="accesstoken">{{ accesstoken }}</pre>
   </div>
@@ -78,7 +78,8 @@ export default {
     if (this.accesstoken != "") {
       axios
         .get(
-          `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/Observation?subject=Patient/${this.patient}`
+          `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/Patient/${this.patient}`,
+          { headers: { Authorization: `Bearer ${this.accesstoken}` } }
         )
         .then(function (response) {
           console.log(response);
