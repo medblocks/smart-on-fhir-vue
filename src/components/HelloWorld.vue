@@ -10,7 +10,9 @@
     </button>
     <p>Username: fhircamila</p>
     <p>Password: epicepic1</p>
-
+    <hr>
+    <p>Patient: {{patient}}</p>
+    <p>Access code:</p>
     <pre v-if="accesstoken">{{ accesstoken }}</pre>
   </div>
   <!-- <p>
@@ -39,6 +41,7 @@ export default {
     return {
       code: "",
       accesstoken: "",
+      patient: "",
     };
   },
   async mounted() {
@@ -65,16 +68,17 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.accesstoken = response.data.access_token;
+          this.patient = response.data.patient;
         })
         .catch(function (error) {
           console.log(error);
         });
     }
-    const currentPatient = "eq081-VQEgP8drUUqCWzHfw3";
+
     if (this.accesstoken != "") {
       axios
         .get(
-          `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/Patient/${currentPatient}`
+          `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/Observation?subject=Patient/${this.patient}`
         )
         .then(function (response) {
           console.log(response);
