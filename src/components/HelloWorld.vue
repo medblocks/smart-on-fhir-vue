@@ -27,8 +27,8 @@ export default {
       patient: "",
       patientdata: {},
       clientId: "42f3b173-16a8-4c50-a3ea-0269294cb869",
-      redirect: import.meta.env.NETLIFY
-        ? import.meta.env.URL
+      redirect: import.meta.env.VITE_NETLIFY
+        ? import.meta.env.VITE_URL
         : "http://localhost:3000",
     };
   },
