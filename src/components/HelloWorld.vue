@@ -2,11 +2,7 @@
   <!-- <h1>{{ msg }}</h1> -->
   <div>
     <button v-if="code == undefined">
-      <a
-        target="_blank"
-        href="https://fhir.epic.com/interconnect-fhir-oauth/oauth2/authorize?response_type=code&redirect_uri=http://localhost:3000&client_id=42f3b173-16a8-4c50-a3ea-0269294cb869&state=1234&scope=patient.read, patient.search"
-        >Sign in</a
-      >
+      <a target="_blank" :href="authorizeLink">Sign in</a>
     </button>
     <p>Username: fhircamila</p>
     <p>Password: epicepic1</p>
@@ -17,21 +13,6 @@
     <p>Patient Demographics:</p>
     <pre>{{ patientdata }}</pre>
   </div>
-  <!-- <p>
-    <a href="https://vitejs.dev/guide/features.html" target="_blank">
-      Vite Documentation
-    </a>
-    |
-    <a href="https://v3.vuejs.org/" target="_blank">Vue 3 Documentation</a>
-  </p>
-
-  <button type="button" @click="state.count++">
-    count is: {{ state.count }}
-  </button>
-  <p>
-    Edit
-    <code>components/HelloWorld.vue</code> to test hot module replacement.
-  </p> -->
 </template>
 
 <script>
@@ -45,7 +26,14 @@ export default {
       accesstoken: "",
       patient: "",
       patientdata: {},
+      clientId: "42f3b173-16a8-4c50-a3ea-0269294cb869",
+      redirect: "https://lucid-wozniak-940eae.netlify.app",
     };
+  },
+  computed: {
+    authorizeLink() {
+      return `https://fhir.epic.com/interconnect-fhir-oauth/oauth2/authorize?response_type=code&redirect_uri=${this.redirect}&client_id=${this.clientId}&state=1234&scope=patient.read, patient.search`;
+    },
   },
   async mounted() {
     console.log(this.$route.query.code);
@@ -53,11 +41,10 @@ export default {
     if (this.code != undefined) {
       const params = new URLSearchParams();
       params.append("grant_type", "authorization_code");
-      params.append("redirect_uri", "http://localhost:3000");
+      params.append("redirect_uri", this.redirect);
       params.append("code", this.code);
-      params.append("client_id", "42f3b173-16a8-4c50-a3ea-0269294cb869");
+      params.append("client_id", this.clientId);
       params.append("state", "1234");
-      // params.append("scope", "patient.read, patient.search");
       const config = {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
