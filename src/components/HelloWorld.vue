@@ -4,7 +4,7 @@
     <button v-if="code == undefined">
       <a
         target="_blank"
-        href="https://fhir.epic.com/interconnect-fhir-oauth/oauth2/authorize?response_type=code&redirect_uri=http://localhost:3000&client_id=2c2944bf-0add-4ed0-9e4d-eba58cc91040&state=1234&scope=openid fhirUser"
+        href="https://fhir.epic.com/interconnect-fhir-oauth/oauth2/authorize?response_type=code&redirect_uri=http://localhost:3000&client_id=42f3b173-16a8-4c50-a3ea-0269294cb869&state=1234&scope=patient.read, patient.search"
         >Sign in</a
       >
     </button>
@@ -14,6 +14,8 @@
     <p>Patient: {{ patient }}</p>
     <p>Access code:</p>
     <pre v-if="accesstoken">{{ accesstoken }}</pre>
+    <p>Patient Demographics:</p>
+    <pre>{{ patientdata }}</pre>
   </div>
   <!-- <p>
     <a href="https://vitejs.dev/guide/features.html" target="_blank">
@@ -42,6 +44,7 @@ export default {
       code: "",
       accesstoken: "",
       patient: "",
+      patientdata: {},
     };
   },
   async mounted() {
@@ -52,8 +55,9 @@ export default {
       params.append("grant_type", "authorization_code");
       params.append("redirect_uri", "http://localhost:3000");
       params.append("code", this.code);
-      params.append("client_id", "2c2944bf-0add-4ed0-9e4d-eba58cc91040");
+      params.append("client_id", "42f3b173-16a8-4c50-a3ea-0269294cb869");
       params.append("state", "1234");
+      // params.append("scope", "patient.read, patient.search");
       const config = {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -78,15 +82,14 @@ export default {
     if (this.accesstoken != "") {
       await axios
         .get(
-          `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/Observation?subject=Patient/${this.patient}`,
-          {
-            headers: { Authorization: `Bearer ${this.accesstoken}` },
-          }
+          `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4/Patient/${this.patient}`,
+          { headers: { Authorization: `Bearer ${this.accesstoken}` } }
         )
-        .then(function (response) {
+        .then((response) => {
+          this.patientdata = response.data;
           console.log(response);
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         });
     }
