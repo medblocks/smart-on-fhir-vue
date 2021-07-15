@@ -4,7 +4,9 @@ import vue from '@vitejs/plugin-vue'
 // https://vitejs.dev/config/
 const viteEnv = {}
 Object.keys(process.env).forEach((key) => {
-  viteEnv[`import.meta.env.${key}`] = process.env[key]
+  if (['NETLIFY', 'URL'].includes(key)) {
+    viteEnv[`import.meta.env.${key}`] = process.env[key]
+  }
 })
 
 
