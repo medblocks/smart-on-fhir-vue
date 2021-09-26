@@ -73,7 +73,7 @@ export default {
       accesstoken: "",
       patient: "",
       patientdata: {},
-      clientId: "42f3b173-16a8-4c50-a3ea-0269294cb869",
+      clientId: "42f3b173-16a8-4c50-a3ea-0269294cb869", // Replace with your client id
       redirect: import.meta.env.PROD
         ? "https://lucid-wozniak-940eae.netlify.app"
         : "http://localhost:3000",
